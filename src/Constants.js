@@ -1,0 +1,6 @@
+export const status = {
+    TO_DO: 'to-do',
+    IN_PROGRESS: 'in-progress',
+    DONE: 'done',
+  };
+  
