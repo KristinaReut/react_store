@@ -9,10 +9,10 @@ class ButtonsForSort extends Component {
             <div>
                 <Button variant="outlined" color="primary" style={{ margin: 20 }} onClick={() => sortByName(categories)}>
                     Sort by name
-          </Button>
+                </Button>
                 <Button variant="outlined" color="primary" style={{ margin: 20 }} onClick={() => sortByDate(categories)}>
                     Sort by date
-          </Button>
+                </Button>
             </div>
         );
     }
