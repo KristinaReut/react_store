@@ -74,7 +74,7 @@ class AddCategory extends Component {
     handleSubmit = () => {
         const { currentInputValue, currentMultipleValue } = this.state;
 
-        const card = {
+        const tiket = {
             title: currentInputValue,
             description: currentMultipleValue,
             status: status.TO_DO,
@@ -82,7 +82,7 @@ class AddCategory extends Component {
             key: this.getKey()
         }
 
-        localStorage.setItem(localStorage.length, JSON.stringify(card));
+        localStorage.setItem(localStorage.length, JSON.stringify(tiket));
         this.loadAllCategories();
         this.setState({
             open: false,
