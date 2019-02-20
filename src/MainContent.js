@@ -49,12 +49,12 @@ class MainContent extends Component {
 
   }
 
-  allowDrop = (ev) => {
-    ev.preventDefault();
-  }
-
   drag = (ev) => {
     ev.dataTransfer.setData("text", ev.target.id);
+  }
+
+  allowDrop = (ev) => {
+    ev.preventDefault();
   }
 
   drop = (ev) => {

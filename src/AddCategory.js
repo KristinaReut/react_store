@@ -68,7 +68,7 @@ class AddCategory extends Component {
 
     loadAllCategories = () => {
         const { loadAllCategories } = this.props;
-        setTimeout(loadAllCategories, 0)
+        loadAllCategories();
     }
 
     handleSubmit = () => {
