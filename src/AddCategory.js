@@ -55,17 +55,6 @@ class AddCategory extends Component {
         })
     };
 
-    getKey = () => {
-        if (localStorage.length) {
-            const keys = Object.keys(localStorage);
-            const keyOfTheLastElement = keys[keys.length - 1];
-            const key = +keyOfTheLastElement + 1
-            return key;
-        } else {
-            return 0;
-        }
-    };
-
     loadAllCategories = () => {
         const { loadAllCategories } = this.props;
         loadAllCategories();
@@ -73,16 +62,15 @@ class AddCategory extends Component {
 
     handleSubmit = () => {
         const { currentInputValue, currentMultipleValue } = this.state;
-
         const tiket = {
             title: currentInputValue,
             description: currentMultipleValue,
             status: status.TO_DO,
             time: new Date(),
-            key: this.getKey()
+            key: +new Date()
         }
 
-        localStorage.setItem(localStorage.length, JSON.stringify(tiket));
+        localStorage.setItem(+new Date(), JSON.stringify(tiket));
         this.loadAllCategories();
         this.setState({
             open: false,

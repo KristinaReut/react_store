@@ -17,7 +17,7 @@ class MainContent extends Component {
   loadAllCategories = () => {
     let arr = [];
     let keys = Object.keys(localStorage);
-    for (let i = 0; i < localStorage.length; i++) {
+    for (let i = 0; i < keys.length; i++) {
       arr.push(JSON.parse(localStorage.getItem(keys[i])));
     }
     this.setState({
