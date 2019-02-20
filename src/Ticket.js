@@ -7,16 +7,16 @@ import Typography from '@material-ui/core/Typography';
 class Ticket extends Component {
 
     render() {
-        const { category, handleDeleteCategory, drag } = this.props;
+        const { ticket, handleDeleteTicket, drag } = this.props;
         return (
-            <Card style={{ margin: '10px', cursor: 'pointer' }} id={category.key} draggable="true" onDragStart={drag}>
+            <Card style={{ margin: '10px', cursor: 'pointer' }} id={ticket.key} draggable="true" onDragStart={drag}>
                 <CardContent>
                     <Typography color="textSecondary" gutterBottom>
-                        <Button style={{ float: 'right' }} color="secondary" onClick={() => handleDeleteCategory(category)}>Delete</Button>
-                        {category.title}
+                        <Button style={{ float: 'right' }} color="secondary" onClick={() => handleDeleteTicket(ticket)}>Delete</Button>
+                        {ticket.title}
                     </Typography>
                     <Typography component="p">
-                        {category.description}
+                        {ticket.description}
                     </Typography>
                 </CardContent>
             </Card>

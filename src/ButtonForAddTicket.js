@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 
-class ButtonForAddCategory extends Component {
+class ButtonForAddTicket extends Component {
 
     render() {
         const { handleClickOpen } = this.props;
@@ -12,4 +12,4 @@ class ButtonForAddCategory extends Component {
         );
     }
 }
-export default ButtonForAddCategory;
+export default ButtonForAddTicket;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
-import ButtonForAddCategory from './ButtonForAddCategory';
+import ButtonForAddTicket from './ButtonForAddTicket';
 import FormForDialog from './FormForDialog';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -9,7 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { status } from './Constants';
 
 
-class AddCategory extends Component {
+class AddTicket extends Component {
 
     state = {
         open: false,
@@ -55,14 +55,14 @@ class AddCategory extends Component {
         })
     };
 
-    loadAllCategories = () => {
-        const { loadAllCategories } = this.props;
-        loadAllCategories();
+    loadAllTickets = () => {
+        const { loadAllTickets } = this.props;
+        loadAllTickets();
     }
 
     handleSubmit = () => {
         const { currentInputValue, currentMultipleValue } = this.state;
-        const tiket = {
+        const ticket = {
             title: currentInputValue,
             description: currentMultipleValue,
             status: status.TO_DO,
@@ -70,8 +70,8 @@ class AddCategory extends Component {
             key: +new Date()
         }
 
-        localStorage.setItem(+new Date(), JSON.stringify(tiket));
-        this.loadAllCategories();
+        localStorage.setItem(+new Date(), JSON.stringify(ticket));
+        this.loadAllTickets();
         this.setState({
             open: false,
             currentInputValue: "",
@@ -85,13 +85,13 @@ class AddCategory extends Component {
 
         return (
             <div>
-                <ButtonForAddCategory handleClickOpen={this.handleClickOpen} />
+                <ButtonForAddTicket handleClickOpen={this.handleClickOpen} />
                 <Dialog
                     open={open}
                     onClose={this.handleClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description">
-                    <DialogTitle id="alert-dialog-title">Add category</DialogTitle>
+                    <DialogTitle id="alert-dialog-title">Add ticket</DialogTitle>
                     <DialogContent>
                         <DialogContent>
                             <FormForDialog
@@ -111,4 +111,4 @@ class AddCategory extends Component {
         );
     }
 }
-export default AddCategory;
+export default AddTicket;

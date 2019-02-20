@@ -6,47 +6,63 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { status } from './Constants';
 import Ticket from './Ticket';
-import ButtonsForSort from './ButtonsForSort'
-import AddCategory from './AddCategory'
+import AddTicket from './AddTicket';
+import Button from '@material-ui/core/Button';
 
 class MainContent extends Component {
   state = {
-    categories: [],
+    ticketsToDo: [],
+    ticketsInProgress: [],
+    ticketsDone: [],
   };
 
-  loadAllCategories = () => {
-    let arr = [];
-    let keys = Object.keys(localStorage);
+  loadAllTickets = () => {
+    const arr1 = [],
+      arr2 = [],
+      arr3 = [];
+    const keys = Object.keys(localStorage);
+
     for (let i = 0; i < keys.length; i++) {
-      arr.push(JSON.parse(localStorage.getItem(keys[i])));
+      const ticket = JSON.parse(localStorage.getItem(keys[i]));
+      const statusOfTicket = ticket.status;
+      if (statusOfTicket === status.TO_DO) {
+        arr1.push(ticket);
+      }
+      if (statusOfTicket === status.IN_PROGRESS) {
+        arr2.push(ticket);
+      }
+      if (statusOfTicket === status.DONE) {
+        arr3.push(ticket);
+      }
     }
+
     this.setState({
-      categories: arr,
-    })
+      ticketsToDo: arr1,
+      ticketsInProgress: arr2,
+      ticketsDone: arr3,
+    });
   }
 
   componentDidMount = () => {
-    setTimeout(this.loadAllCategories, 1000);
+    setTimeout(this.loadAllTickets, 1000);
   }
 
-  handleDeleteCategory = (category) => {
-    localStorage.removeItem(category.key);
-    this.loadAllCategories()
+  handleDeleteTicket = (ticket) => {
+    localStorage.removeItem(ticket.key);
+    this.loadAllTickets();
   }
 
-  sortByName = (categories) => {
-    let arr = categories.sort((a, b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
+  sort = (tickets, e) => {
+    const methods = e.currentTarget.id;
+    const sortTickets = tickets.sort((a, b) => (a[methods] > b[methods]) ? 1 : ((b[methods] > a[methods]) ? -1 : 0));
+    const name = tickets
+      .filter(tiket => tiket.stats === status.TO_DO ?
+        'ticketsToDo' : status.IN_PROGRESS ?
+          'ticketsInProgress' : 'ticketsDone');
+
     this.setState({
-      categories: arr,
+      [name]: sortTickets,
     })
-  }
-
-  sortByDate = (categories) => {
-    let arr = categories.sort((a, b) => (a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0));
-    this.setState({
-      categories: arr,
-    })
-
   }
 
   drag = (ev) => {
@@ -59,23 +75,19 @@ class MainContent extends Component {
 
   drop = (ev) => {
     ev.preventDefault();
-    let data = ev.dataTransfer.getData("text");
-    let card = JSON.parse(localStorage.getItem(data));
-    card.status =
-      (ev.currentTarget.classList.contains(status.TO_DO)) ?
-        status.TO_DO :
-        (ev.currentTarget.classList.contains(status.IN_PROGRESS)) ?
-          status.IN_PROGRESS : status.DONE;
+    const data = ev.dataTransfer.getData("text");
+    const card = JSON.parse(localStorage.getItem(data));
+    card.status = ev.currentTarget.id;
     localStorage[data] = JSON.stringify(card);
-    this.loadAllCategories();
+    this.loadAllTickets();
   }
 
   render() {
-    const { categories } = this.state
+    const { ticketsToDo, ticketsInProgress, ticketsDone } = this.state;
 
     return (
       <div>
-        <AddCategory loadAllCategories={this.loadAllCategories}/>
+        <AddTicket loadAllTickets={this.loadAllTickets} />
         <Table>
           <TableHead>
             <TableRow>
@@ -86,41 +98,50 @@ class MainContent extends Component {
           </TableHead>
           <TableBody>
             <TableRow >
-              <TableCell onDrop={this.drop} onDragOver={this.allowDrop} className={status.TO_DO}>
-                <ButtonsForSort sortByName={this.sortByName} sortByDate={this.sortByDate} categories={categories} />
-                {categories.map((category, index) => {
-                  return category.status === status.TO_DO ?
-                    (<Ticket
-                      key={index}
-                      category={category}
-                      handleDeleteCategory={this.handleDeleteCategory}
-                      drag={this.drag} />
-                    ) : null
-                })}
+              <TableCell onDrop={this.drop} onDragOver={this.allowDrop} id={status.TO_DO}>
+                <Button variant="outlined" style={{margin: 10}} color="primary" onClick={(e) => this.sort(ticketsToDo, e)} id="title">
+                  Sort by name
+                </Button>
+                <Button variant="outlined" color="primary" onClick={(e) => this.sort(ticketsToDo, e)} id="time">
+                  Sort by date
+                </Button>
+                {ticketsToDo.map(ticket =>
+                  <Ticket
+                    key={ticket.key}
+                    ticket={ticket}
+                    handleDeleteTicket={this.handleDeleteTicket}
+                    drag={this.drag} />
+                )}
               </TableCell>
-              <TableCell onDrop={this.drop} onDragOver={this.allowDrop} className={status.IN_PROGRESS}>
-                <ButtonsForSort sortByName={this.sortByName} sortByDate={this.sortByDate} categories={categories} />
-                {categories.map((category, index) => {
-                  return category.status === status.IN_PROGRESS ?
-                    (<Ticket
-                      key={index}
-                      category={category}
-                      handleDeleteCategory={this.handleDeleteCategory}
-                      drag={this.drag} />
-                    ) : null
-                })}
+              <TableCell onDrop={this.drop} onDragOver={this.allowDrop} id={status.IN_PROGRESS}>
+                <Button variant="outlined" style={{margin: 10}} color="primary" onClick={(e) => this.sort(ticketsInProgress, e)} id="title">
+                  Sort by name
+                </Button>
+                <Button variant="outlined" color="primary" onClick={(e) => this.sort(ticketsInProgress, e)} id="time">
+                  Sort by date
+                </Button>
+                {ticketsInProgress.map(ticket =>
+                  <Ticket
+                    key={ticket.key}
+                    ticket={ticket}
+                    handleDeleteTicket={this.handleDeleteTicket}
+                    drag={this.drag} />
+                )}
               </TableCell>
-              <TableCell onDrop={this.drop} onDragOver={this.allowDrop} className={status.DONE}>
-                <ButtonsForSort sortByName={this.sortByName} sortByDate={this.sortByDate} categories={categories} />
-                {categories.map((category, index) => {
-                  return category.status === status.DONE ?
-                    (<Ticket
-                      key={index}
-                      category={category}
-                      handleDeleteCategory={this.handleDeleteCategory}
-                      drag={this.drag} />
-                    ) : null
-                })}
+              <TableCell onDrop={this.drop} onDragOver={this.allowDrop} id={status.DONE}>
+                <Button variant="outlined" style={{margin: 10}} color="primary" onClick={(e) => this.sort(ticketsDone, e)} id="title">
+                  Sort by name
+                </Button>
+                <Button variant="outlined" color="primary" onClick={(e) => this.sort(ticketsDone, e)} id="time">
+                  Sort by date
+                </Button>
+                {ticketsDone.map(ticket =>
+                  <Ticket
+                    key={ticket.key}
+                    ticket={ticket}
+                    handleDeleteTicket={this.handleDeleteTicket}
+                    drag={this.drag} />
+                )}
               </TableCell>
             </TableRow>
           </TableBody>
